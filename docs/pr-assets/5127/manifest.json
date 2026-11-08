@@ -1,0 +1,59 @@
+[
+  {
+    "name": "01-connect.png",
+    "bytes": 60581,
+    "sha256": "d6f1bc9cc737fe127d656fe5c39034eed3649b4bf5291917ce2c488ac198d3a3",
+    "png_chunk_types": [
+      "IDAT",
+      "IEND",
+      "IHDR"
+    ]
+  },
+  {
+    "name": "02-database-picker.png",
+    "bytes": 76081,
+    "sha256": "d8bab424652f42f11a63d1f8dbab872c71adee277dfbcc457e3f8657433a819f",
+    "png_chunk_types": [
+      "IDAT",
+      "IEND",
+      "IHDR"
+    ]
+  },
+  {
+    "name": "03-connected-collapsed.png",
+    "bytes": 66808,
+    "sha256": "6cb0479e560adbdc234a1eab502f2b24e1f999a0a3c439b44975dd13963d4789",
+    "png_chunk_types": [
+      "IDAT",
+      "IEND",
+      "IHDR"
+    ]
+  },
+  {
+    "name": "04-field-mapping.png",
+    "bytes": 99216,
+    "sha256": "49c8139bc869702f7b1fdaaacb9bdbda5f46b98e52152e9faf414670f0a4de7e",
+    "png_chunk_types": [
+      "IDAT",
+      "IEND",
+      "IHDR"
+    ]
+  },
+  {
+    "name": "05-disconnected.png",
+    "bytes": 75833,
+    "sha256": "305750d1a57b42bb4dcec6e0200cf2fd1d804ba0f29ee766c88a0f7d3dbf839a",
+    "png_chunk_types": [
+      "IDAT",
+      "IEND",
+      "IHDR"
+    ]
+  },
+  {
+    "name": "notion-synthetic-demo.mp4",
+    "bytes": 278881,
+    "sha256": "39f0344d13b90f91c9edb442463533ae4275c799715bf6afe440730fa9442a5f",
+    "png_chunk_types": []
+  }
+]
+
