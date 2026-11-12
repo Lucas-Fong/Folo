@@ -89,7 +89,8 @@ export const ExtensionExposeProvider = () => {
         clearDataIfLoginOtherAccount(newUserId)
       },
       async applyOneTimeToken(token: string) {
-        await oneTimeToken.apply({ token })
+        const result = await oneTimeToken.apply({ token })
+        if (result?.error) throw new Error("Login failed")
         handleSessionChanges()
       },
 
