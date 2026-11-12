@@ -29,8 +29,14 @@ import { useRouteParams } from "~/hooks/biz/useRouteParams"
 import { ipcServices } from "~/lib/client"
 import { CustomIntegrationManager } from "~/modules/integration/custom-integration-manager"
 import { getEntryContentAsMarkdown } from "~/modules/integration/entry-content-markdown"
-import { getNotionArticleContent, getNotionPageUrl } from "~/modules/integration/notion-article"
+import {
+  getNotionArticleContent,
+  getNotionCachedSummary,
+  getNotionPageUrl,
+} from "~/modules/integration/notion-article"
+import { notionLocalClient } from "~/modules/integration/notion-local"
 import { useNotionStatus } from "~/modules/integration/notion-status"
+import { NotionIcon } from "~/modules/integration/NotionIcon"
 
 import { useRegisterCommandEffect } from "../hooks/use-register-command"
 import { defineFollowCommand } from "../registry/command"
@@ -63,7 +69,7 @@ const useRegisterNotionCommands = () => {
       : defineFollowCommand({
           id: COMMAND_ID.integration.saveToNotion,
           label: t("entry_actions.save_to_notion"),
-          icon: <i className="i-mgc-document-cute-re" />,
+          icon: <NotionIcon />,
           category,
           run: async ({ entryId }) => {
             if (pendingRef.current.has(entryId)) return
@@ -83,11 +89,25 @@ const useRegisterNotionCommands = () => {
                 getReadabilityStatus()[entry.id] === ReadabilityStatus.SUCCESS,
               )
               if (!content.trim()) throw new Error("Entry content unavailable")
-              const result = await services.notion.saveArticle({
+              const cachedSummary = getSummary(entry.id, getActionLanguage())
+              const aiSummary = getNotionCachedSummary(
+                entry,
+                getReadabilityStatus()[entry.id] === ReadabilityStatus.SUCCESS,
+                cachedSummary,
+              )
+              const result = await notionLocalClient.saveArticle({
                 title: entry.title || entry.url,
                 url: entry.url,
                 content,
                 feedTitle: getFeedById(entry.feedId)?.title || "",
+                author: entry.author || undefined,
+                publishedAt:
+                  entry.publishedAt && Number.isFinite(new Date(entry.publishedAt).getTime())
+                    ? new Date(entry.publishedAt).toISOString()
+                    : undefined,
+                description: entry.description || undefined,
+                aiSummary: aiSummary || undefined,
+                categories: entry.categories || undefined,
               })
               const pageUrl = getNotionPageUrl(result.url)
               const options = {
@@ -102,7 +122,12 @@ const useRegisterNotionCommands = () => {
                   : undefined,
               }
               if (result.warnings.length) {
-                toast.warning(t("entry_actions.saved_to_notion_with_warnings"), options)
+                toast.warning(t("entry_actions.saved_to_notion_with_warnings"), {
+                  ...options,
+                  ...(result.warnings.includes("NOTION_AI_SUMMARY_MISSING")
+                    ? { description: t("integration.notion.ai_existing_only", { ns: "settings" }) }
+                    : {}),
+                })
               } else {
                 toast.success(t("entry_actions.saved_to_notion"), options)
               }

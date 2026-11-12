@@ -33,5 +33,10 @@ export const openDeepLink = (url: string) => {
 
 export const setRendererReady = (ready: boolean) => {
   isRendererReady = ready
+  if (ready && process.env.FOLO_DEV_LOOPBACK_LOGIN === "1") {
+    void import("./dev-login").then(({ startIsolatedDevelopmentLogin }) =>
+      startIsolatedDevelopmentLogin(),
+    )
+  }
   flush()
 }
